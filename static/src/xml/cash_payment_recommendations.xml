@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="coffee_shop_cashier.CashPaymentRecommendations"
+       t-inherit="point_of_sale.PaymentScreen"
+       t-inherit-mode="extension">
+        <!-- Desktop/tablet: use the same stable PaymentScreenDue anchor as the QRIS panel. -->
+        <xpath expr="//div[contains(@class, 'center-content')]/t[@t-call='point_of_sale.PaymentScreenDue']"
+               position="after">
+            <div t-if="this.isCashPaymentSelected" class="cash-payment-recommendations">
+                <button t-foreach="this.cashPaymentRecommendations" t-as="amount" t-key="amount"
+                        type="button" class="btn btn-light cash-payment-recommendation"
+                        t-on-click="() => this.selectCashPaymentRecommendation(amount)">
+                    <t t-esc="env.utils.formatCurrency(amount)"/>
+                </button>
+            </div>
+        </xpath>
+
+        <!-- Mobile -->
+        <xpath expr="//t[@t-if='ui.isSmall']//t[@t-call='point_of_sale.PaymentScreenDue']"
+               position="after">
+            <div t-if="this.isCashPaymentSelected"
+                 class="cash-payment-recommendations cash-payment-recommendations-mobile">
+                <button t-foreach="this.cashPaymentRecommendations" t-as="amount" t-key="amount"
+                        type="button" class="btn btn-light cash-payment-recommendation"
+                        t-on-click="() => this.selectCashPaymentRecommendation(amount)">
+                    <t t-esc="env.utils.formatCurrency(amount)"/>
+                </button>
+            </div>
+        </xpath>
+    </t>
+</templates>

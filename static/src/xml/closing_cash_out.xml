@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="coffee_shop_cashier.ClosePosPopupCashOut"
+       t-inherit="point_of_sale.ClosePosPopup"
+       t-inherit-mode="extension">
+        <xpath expr="//div[@t-if='props.default_cash_details.payment_amount']/following-sibling::div[1]" position="after">
+            <div t-if="displayedStoreCashOut &gt; 0"
+                 class="d-flex align-items-center justify-content-between text-muted border-start ps-2">
+                <span>Cash Used</span>
+                <span t-esc="env.utils.formatCurrency(displayedStoreCashOut)"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[label[normalize-space()='Cash Count']]" position="before">
+            <div t-if="pos.config.cash_control" class="mb-3">
+                <label class="form-label">Cash Out</label>
+                <Input tModel="[state, 'storeCashOut']"
+                    isValid.bind="env.utils.isValidFloat"
+                    class="'cash-input w-100'"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

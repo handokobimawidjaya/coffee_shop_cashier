@@ -10,4 +10,40 @@
             </xpath>
         </field>
     </record>
+
+    <record id="view_pos_order_tree_customer_name" model="ir.ui.view">
+        <field name="name">pos.order.list.customer.name</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="replace">
+                <field name="customer_name" string="Customer"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_pos_order_kanban_customer_name" model="ir.ui.view">
+        <field name="name">pos.order.kanban.customer.name</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban/field[@name='currency_id']" position="after">
+                <field name="customer_name"/>
+            </xpath>
+            <xpath expr="//templates/t[@t-name='card']/div[1]" position="replace">
+                <div class="d-flex align-items-baseline mb-1">
+                    <span t-if="record.customer_name.value">
+                        <field name="customer_name" class="fw-bolder me-2"/>
+                    </span>
+                    <span t-elif="record.partner_id.value">
+                        <field name="partner_id" class="fw-bolder me-2"/>
+                    </span>
+                    <span t-else="">
+                        <field name="name" class="fw-bolder me-2"/>
+                    </span>
+                    <field name="amount_total" widget="monetary" class="fw-bolder ms-auto flex-shrink-0"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
 </odoo>

@@ -23,7 +23,7 @@
         - Custom QRIS payment screen.
     """,
 
-    'author': 'Antigravity',
+    'author': 'Handoko Bimawidjaya',
 
     'depends': [
         'point_of_sale',
@@ -37,6 +37,7 @@
         'data/coffee_shop_data.xml',
         'data/mail_template_data.xml',
         'report/pos_order_receipt.xml',
+        'report/pos_session_sales_details.xml',
 
         'views/product_template_views.xml',
         'views/pos_order_customer_name_views.xml',
@@ -59,12 +60,17 @@
         'coffee_shop_cashier/static/src/js/product_card_quantity.js',
         'coffee_shop_cashier/static/src/js/receipt_customer_name.js',
         'coffee_shop_cashier/static/src/js/customer_name_pos.js',
+        'coffee_shop_cashier/static/src/js/closing_cash_out.js',
+        'coffee_shop_cashier/static/src/js/cash_payment_recommendations.js',
         'coffee_shop_cashier/static/src/xml/qris_payment_screen.xml',
         'coffee_shop_cashier/static/src/xml/product_card_quantity.xml',
         'coffee_shop_cashier/static/src/xml/receipt_customer_name.xml',
         'coffee_shop_cashier/static/src/xml/customer_name_pos.xml',
+        'coffee_shop_cashier/static/src/xml/closing_cash_out.xml',
+        'coffee_shop_cashier/static/src/xml/cash_payment_recommendations.xml',
         'coffee_shop_cashier/static/src/xml/ticket_screen_columns.xml',
         'coffee_shop_cashier/static/src/css/qris_payment_screen.css',
+        'coffee_shop_cashier/static/src/css/cash_payment_recommendations.css',
         'coffee_shop_cashier/static/src/css/product_card_quantity.css',
         'coffee_shop_cashier/static/src/css/ticket_screen_columns.css',
         'coffee_shop_cashier/static/src/css/thermal_receipt.css',

@@ -3,3 +3,4 @@ from . import product_template
 from . import pos_order
 from . import res_config_settings
 from . import coffee_shop_dashboard
+from . import pos_session

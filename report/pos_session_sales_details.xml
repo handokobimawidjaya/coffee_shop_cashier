@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="pos_session_sales_details_title" inherit_id="point_of_sale.pos_session_sales_details">
+        <xpath expr="//h2[@id='daily_report_title']" position="replace">
+            <h2 id="daily_report_title">Daily Sales Report</h2>
+        </xpath>
+        <xpath expr="//div[@id='payments']//tr[@class='fs-5']/th[2]" position="replace">
+            <th class="text-end fw-bolder">
+                <t t-if="currency['position']">
+                    <span t-out="payments_net_total" t-options="{'widget': 'float', 'precision': currency['precision']}"/><span t-out="currency['symbol']"/>
+                </t>
+                <t t-else="">
+                    <span t-out="currency['symbol']"/><span t-out="payments_net_total" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                </t>
+            </th>
+        </xpath>
+        <xpath expr="//table[thead/tr/th[normalize-space()='Name'] and thead/tr/th[normalize-space()='Expected']]" position="replace"/>
+    </template>
+</odoo>

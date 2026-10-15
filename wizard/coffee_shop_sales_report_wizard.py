@@ -59,6 +59,7 @@ class CoffeeShopSalesReportWizard(models.TransientModel):
             ('Kategori', report_data['categories']),
             ('Total Qty', report_data['total_qty']),
             ('Total Sales', report_data['total_sales']),
+            ('Total Cash Out', report_data['total_cash_out']),
         ]
         for row, (label, value) in enumerate(summary_rows, start=2):
             summary_sheet.cell(row=row, column=1, value=label).font = bold_font
@@ -102,6 +103,25 @@ class CoffeeShopSalesReportWizard(models.TransientModel):
             for cell in row:
                 cell.number_format = '#,##0.00'
 
+        cash_out_sheet = workbook.create_sheet('Cash Out')
+        cash_out_headers = ['POS Session', 'Date', 'Cash Out']
+        cash_out_sheet.append(cash_out_headers)
+        for column in range(1, len(cash_out_headers) + 1):
+            cell = cash_out_sheet.cell(row=1, column=column)
+            cell.fill = header_fill
+            cell.font = header_font
+        cash_out_sheet.column_dimensions['A'].width = 24
+        cash_out_sheet.column_dimensions['B'].width = 22
+        cash_out_sheet.column_dimensions['C'].width = 18
+        for session in report_data['cash_out_sessions']:
+            cash_out_sheet.append([
+                session['name'],
+                session['date'],
+                session['cash_out'],
+            ])
+        for cell in cash_out_sheet.iter_rows(min_row=2, min_col=3, max_col=3):
+            cell[0].number_format = '#,##0.00'
+
         workbook.save(output)
         output.seek(0)
 
@@ -133,7 +153,7 @@ class CoffeeShopSalesReportWizard(models.TransientModel):
         query = """
             SELECT
                 COALESCE(pt.name->>%s, pt.name->>'en_US') AS product_name,
-                COALESCE(rp.complete_name , '') AS customer_name,
+                COALESCE(NULLIF(BTRIM(po.customer_name), ''), rp.complete_name, '') AS customer_name,
                 COALESCE(pc.name, pc.complete_name, '-') AS product_category,
                 COALESCE(payment_info.payment_methods, '-') AS payment_method,
                 SUM(pol.qty) AS qty,
@@ -204,6 +224,19 @@ class CoffeeShopSalesReportWizard(models.TransientModel):
                 'total_sales': sales,
             })
 
+        cash_out_sessions = self.env['pos.session'].search([
+            ('config_id.company_id', '=', self.env.company.id),
+            ('start_at', '>=', dt_start),
+            ('start_at', '<=', dt_end),
+            ('store_cash_out', '>', 0),
+        ], order='start_at asc')
+        cash_out_rows = [{
+            'name': session.name,
+            'date': fields.Datetime.to_string(session.start_at),
+            'cash_out': session.store_cash_out,
+        } for session in cash_out_sessions]
+        total_cash_out = sum(session.store_cash_out for session in cash_out_sessions)
+
         return {
             'date_start': date_start,
             'date_end': date_end,
@@ -211,5 +244,7 @@ class CoffeeShopSalesReportWizard(models.TransientModel):
             'products': products,
             'total_sales': total_sales,
             'total_qty': total_qty,
+            'cash_out_sessions': cash_out_rows,
+            'total_cash_out': total_cash_out,
             'company_name': self.env.company.name,
         }
