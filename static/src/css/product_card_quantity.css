@@ -1,0 +1,96 @@
+.product .product-content:has(.product-cart-qty-controls) {
+    display: flex !important;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    flex: 0 0 auto;
+    min-height: 78px;
+    padding: 15px !important;
+    box-sizing: border-box;
+}
+
+.product .product-content:has(.product-cart-qty-controls) .product-name {
+    display: flex !important;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    min-height: 1.2em;
+    margin: 0 !important;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    overflow: visible !important;
+    overflow-wrap: normal;
+    word-break: normal;
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: initial;
+    aspect-ratio: auto !important;
+    color: #212529;
+    text-align: center !important;
+    font-size: clamp(1rem, 1.8vw, 0rem);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.product .product-cart-qty-controls {
+    position: static;
+    z-index: 1;
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-self: flex-end;
+    width: max-content;
+    max-width: 100%;
+    margin-top: auto;
+    align-items: center;
+    gap: 5px;
+    padding: 2px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.product .product-cart-qty-button {
+    display: inline-flex;
+    width: clamp(32px, 3.2vw, 36px);
+    height: clamp(32px, 3.2vw, 36px);
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #6f5b9a;
+    color: #fff;
+    cursor: pointer;
+}
+
+.product .product-cart-qty-button:hover {
+    background: #59477f;
+}
+
+.product .product-cart-qty-value {
+    min-width: 1.4em;
+    color: #495057;
+    font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+}
+
+@media (max-width: 576px) {
+    .product .product-content:has(.product-cart-qty-controls) {
+        min-height: 72px;
+        padding: 15px !important;
+    }
+
+    .product .product-cart-qty-controls {
+        gap: 5px;
+    }
+
+    .product .product-cart-qty-button {
+        width: 32px;
+        height: 32px;
+    }
+}

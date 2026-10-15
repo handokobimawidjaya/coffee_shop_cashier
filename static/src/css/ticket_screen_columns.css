@@ -1,0 +1,28 @@
+@media (min-width: 992px) {
+    .ticket-screen .order-row:not(.mobileOrderList) [name="ticket-date"],
+    .ticket-screen .order-row:not(.mobileOrderList) [name="ticket-receipt-number"],
+    .ticket-screen .order-row:not(.mobileOrderList) [name="ticket-cardholder"],
+    .ticket-screen .order-row:not(.mobileOrderList) [name="ticket-cashier"] {
+        display: none !important;
+    }
+
+    .ticket-screen .order-row:not(.mobileOrderList) [name="ticket-customer"] {
+        order: 1;
+    }
+
+    .ticket-screen .order-row:not(.mobileOrderList) [name="ticket-order-number"] {
+        order: 2;
+    }
+
+    .ticket-screen .order-row:not(.mobileOrderList) [name="ticket-total"] {
+        order: 3;
+    }
+
+    .ticket-screen .order-row:not(.mobileOrderList) [name="ticket-status"] {
+        order: 4;
+    }
+
+    .ticket-screen .order-row:not(.mobileOrderList) [name="delete"] {
+        order: 5;
+    }
+}

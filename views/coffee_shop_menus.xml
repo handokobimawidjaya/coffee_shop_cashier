@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Dashboard Form View -->
+    <record id="view_coffee_shop_dashboard_form" model="ir.ui.view">
+        <field name="name">coffee.shop.dashboard.form</field>
+        <field name="model">coffee.shop.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Coffee Shop Dashboard" create="false" edit="false" delete="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1 style="color: #6f4e37; font-family: 'Outfit', 'Inter', sans-serif;">
+                            ☕ Coffee Shop Overview
+                        </h1>
+                    </div>
+                    
+                    <!-- KPI Metrics Grid -->
+                    <div class="d-flex flex-wrap gap-3 mb-4 mt-3" style="margin-left:-8px; margin-right:-8px;">
+                        <!-- Card 1: Today's Revenue -->
+                        <div class="card shadow-sm border-0 flex-fill text-dark" style="min-width: 220px; background-color: #fcfbfa; border-left: 5px solid #6f4e37 !important; border-radius: 8px;">
+                            <div class="card-body p-6 text-center">
+                                <h5 class="text-uppercase mb-2 font-weight-bold" style="color: #8c7b70; font-size: 12px; letter-spacing: 1px;">Pendapatan Hari Ini</h5>
+                                <h2 class="m-0" style="color: #6f4e37; font-weight: 700;">
+                                    <field name="total_sales_today" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+                                </h2>
+                                <p class="text-muted mt-2 mb-0" style="font-size: 13px;"><field name="sales_count_today"/> Transaksi Sukses</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Card 2: Low Stock Count -->
+                        <div class="card shadow-sm border-0 flex-fill text-dark" style="min-width: 220px; background-color: #fffcfc; border-left: 5px solid #d9534f !important; border-radius: 8px;">
+                            <div class="card-body p-6 text-center">
+                                <h5 class="text-uppercase mb-2 font-weight-bold" style="color: #c9302c; font-size: 12px; letter-spacing: 1px;">Stok Kritis</h5>
+                                <h2 class="m-0" style="color: #d9534f; font-weight: 700;">
+                                    <field name="low_stock_items_count"/>
+                                </h2>
+                                <p class="text-muted mt-2 mb-0" style="font-size: 13px;">Bahan/Produk Hampir Habis</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Action Buttons -->
+                    <div class="d-flex gap-3 mb-4 mt-2">
+                        <button string="Buka Sesi Kasir (POS)" type="object" name="action_open_pos" class="btn btn-primary p-3" icon="fa-desktop" style="background-color: #6f4e37; border-color: #6f4e37; font-weight: bold; border-radius: 6px; box-shadow: 0 4px 6px rgba(111,78,55,0.1);"/>
+                        <button string="Cek Stok Rendah Sekarang" type="object" name="action_trigger_cron" class="btn btn-outline-secondary p-3" icon="fa-refresh" style="font-weight: bold; border-radius: 6px; border-color: #ece9e2; color: #6f4e37;"/>
+                    </div>
+
+                    <!-- Critical Stock Table -->
+                    <notebook>
+                        <page string="⚠️ Daftar Stok Kritis (Segera Order)" name="critical_stock">
+                            <div class="alert alert-warning mt-2 mb-3" role="alert" style="border-radius: 6px; background-color: #fdf8e2; border-color: #f7ecb5; color: #8a6d3b;">
+                                <i class="fa fa-info-circle"/> Produk di bawah ini memiliki stok kurang dari atau sama dengan batas threshold. Notifikasi email otomatis akan dikirim ke alamat email yang dikonfigurasi.
+                            </div>
+                            <field name="low_stock_product_ids" readonly="1">
+                                <list create="0" delete="0" edit="0" class="o_list_view">
+                                    <field name="name" string="Nama Bahan / Produk" style="font-weight: bold;"/>
+                                    <field name="qty_available" string="Stok Saat Ini" decoration-danger="1" widget="float"/>
+                                    <field name="low_stock_threshold" string="Threshold Minimum" widget="float"/>
+                                    <field name="uom_id" string="Satuan"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Dashboard Action -->
+    <record id="action_coffee_shop_dashboard" model="ir.actions.act_window">
+        <field name="name">Coffee Shop Overview</field>
+        <field name="res_model">coffee.shop.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_coffee_shop_dashboard_form"/>
+        <field name="target">current</field>
+    </record>
+
+    <!-- Menus Structure -->
+    <menuitem id="menu_coffee_shop_root" 
+              name="Coffee Shop" 
+              web_icon="point_of_sale.point_of_sale_menu_action,fa-coffee,#6f4e37,#ffffff"
+              sequence="5"/>
+
+    <menuitem id="menu_coffee_shop_dashboard" 
+              name="Dashboard" 
+              parent="menu_coffee_shop_root" 
+              action="action_coffee_shop_dashboard" 
+              sequence="10"/>
+
+    <menuitem id="menu_coffee_shop_reporting" 
+              name="Laporan" 
+              parent="menu_coffee_shop_root" 
+              sequence="20"/>
+</odoo>

@@ -1,0 +1,82 @@
+/* Android/browser print dialog for the POS receipt on a 58 mm thermal roll. */
+@media print {
+    @page {
+        size: 58mm auto;
+        margin: 0;
+    }
+
+    .o_body_html,
+    #wrapwrap,
+    #wrapwrap > main {
+        box-sizing: border-box !important;
+        width: 58mm !important;
+        max-width: 58mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+    }
+
+    .render-container {
+        position: absolute !important;
+        top: 10px !important;
+        left: 10px !important;
+        width: 48mm !important;
+        max-width: 48mm !important;
+    }
+
+    .render-container .pos-receipt {
+        box-sizing: border-box !important;
+        width: 48mm !important;
+        max-width: 48mm !important;
+        margin: 0 auto !important;
+        overflow-wrap: anywhere;
+        font-size: 11px !important;
+    }
+
+    /* Keep product names flexible and prices intact on the narrow roll. */
+    .render-container .pos-receipt .orderline {
+        font-size: 10px !important;
+    }
+
+    .render-container .pos-receipt .product-name {
+        min-width: 0;
+        font-size: 10px !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere;
+    }
+
+    .render-container .pos-receipt .product-price {
+        flex-shrink: 0;
+        white-space: nowrap;
+        font-size: 10px !important;
+    }
+
+    .render-container .pos-receipt .pos-receipt-taxes {
+        font-size: 10px !important;
+    }
+
+    .render-container .pos-receipt .pos-receipt-taxes .d-flex {
+        align-items: flex-start;
+        gap: 2px;
+    }
+
+    .render-container .pos-receipt .pos-receipt-taxes .d-flex > span:last-child {
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+
+    .render-container .pos-receipt .pos-receipt-amount,
+    .render-container .pos-receipt .paymentlines {
+        display: flex;
+        justify-content: space-between;
+        gap: 4px;
+        font-size: 12px !important;
+    }
+
+    .render-container .pos-receipt .pos-receipt-amount .pos-receipt-right-align,
+    .render-container .pos-receipt .paymentlines .pos-receipt-right-align {
+        flex-shrink: 0;
+        white-space: nowrap;
+        float: none;
+    }
+}

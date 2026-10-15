@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+
+    <t t-name="coffee_shop_cashier.QrisPaymentScreen"
+       t-inherit="point_of_sale.PaymentScreen"
+       t-inherit-mode="extension">
+
+        <!-- DESKTOP / TABLET -->
+        <xpath expr="//div[contains(@class, 'center-content')]/t[@t-call='point_of_sale.PaymentScreenDue']"
+               position="after">
+
+            <div t-if="this.isQrisSelected"
+                 class="qris-payment-panel">
+
+                <div class="qris-payment-content">
+
+                    <img
+                        t-att-src="this.qrisImageUrl"
+                        class="qris-payment-image"
+                        alt="QRIS COD Coffee"
+                    />
+
+                </div>
+
+            </div>
+
+        </xpath>
+
+
+        <!-- MOBILE -->
+        <xpath expr="//t[@t-if='ui.isSmall']//t[@t-call='point_of_sale.PaymentScreenMethods']"
+               position="after">
+
+            <div t-if="this.isQrisSelected"
+                 class="qris-payment-panel qris-payment-mobile">
+
+                <div class="qris-payment-content">
+
+                    <img
+                        t-att-src="this.qrisImageUrl"
+                        class="qris-payment-image"
+                        alt="QRIS COD Coffee"
+                    />
+
+                </div>
+
+            </div>
+
+        </xpath>
+
+    </t>
+
+</templates>

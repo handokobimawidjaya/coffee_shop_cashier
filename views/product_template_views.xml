@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Product Template Form View Inheritance -->
+    <record id="product_template_form_view_inherit_coffee" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.coffee</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="stock.view_template_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='inventory']" position="inside">
+                <group name="coffee_shop_alerts" string="Coffee Shop Stock Alerts">
+                    <group>
+                        <field name="alert_on_low_stock" widget="boolean_toggle"/>
+                        <field name="low_stock_threshold" invisible="not alert_on_low_stock"/>
+                    </group>
+                    <group>
+                        <field name="low_stock_alert_sent" invisible="not alert_on_low_stock" readonly="1"/>
+                    </group>
+                </group>
+                <group name="coffee_shop_recipe" string="Coffee Shop Recipe">
+                    <group>
+                        <field name="coffee_beans_product_id"/>
+                        <field name="coffee_beans_qty_per_cup" invisible="not coffee_beans_product_id"/>
+                    </group>
+                    <group>
+                        <label for="coffee_beans_qty_per_cup" string="Example: use 15 when one cup consumes 15 gr beans and the beans product uses gram UoM." invisible="not coffee_beans_product_id"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

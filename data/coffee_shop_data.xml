@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- POS Categories -->
+        <record id="pos_category_coffee" model="pos.category">
+            <field name="name">Coffee</field>
+        </record>
+
+        <record id="pos_category_non_coffee" model="pos.category">
+            <field name="name">Non Coffee</field>
+        </record>
+
+        <record id="pos_category_pastry" model="pos.category">
+            <field name="name">Pastry</field>
+        </record>
+
+        <record id="pos_category_beans" model="pos.category">
+            <field name="name">Beans</field>
+        </record>
+
+        <!-- Product Categories (Backend) -->
+        <record id="product_category_coffee" model="product.category">
+            <field name="name">Coffee</field>
+            <field name="parent_id" ref="product.product_category_all"/>
+        </record>
+
+        <record id="product_category_non_coffee" model="product.category">
+            <field name="name">Non Coffee</field>
+            <field name="parent_id" ref="product.product_category_all"/>
+        </record>
+
+        <record id="product_category_beans" model="product.category">
+            <field name="name">Beans</field>
+            <field name="parent_id" ref="product.product_category_all"/>
+        </record>
+
+        <!-- Products -->
+        <record id="product_arabica_beans" model="product.template">
+            <field name="name">Arabica Beans</field>
+            <field name="list_price">85000.0</field>
+            <field name="standard_price">35000.0</field>
+            <field name="categ_id" ref="product_category_beans"/>
+            <field name="type">consu</field>
+            <field name="is_storable">True</field>
+            <field name="uom_id" ref="uom.product_uom_gram"/>
+            <field name="uom_po_id" ref="uom.product_uom_gram"/>
+            <field name="available_in_pos">True</field>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_beans')])]"/>
+            <field name="alert_on_low_stock">True</field>
+            <field name="low_stock_threshold">50.0</field>
+            <field name="image_1920" type="base64" file="coffee_shop_cashier/static/img/arabica.jpg"/>
+        </record>
+
+        <record id="product_robusta_beans" model="product.template">
+            <field name="name">Robusta Beans</field>
+            <field name="list_price">75000.0</field>
+            <field name="standard_price">30000.0</field>
+            <field name="categ_id" ref="product_category_beans"/>
+            <field name="type">consu</field>
+            <field name="is_storable">True</field>
+            <field name="uom_id" ref="uom.product_uom_gram"/>
+            <field name="uom_po_id" ref="uom.product_uom_gram"/>
+            <field name="available_in_pos">True</field>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_beans')])]"/>
+            <field name="alert_on_low_stock">True</field>
+            <field name="low_stock_threshold">50.0</field>
+            <field name="image_1920" type="base64" file="coffee_shop_cashier/static/img/robusta.jpg"/>
+        </record>
+
+        <!-- Scheduled Action (Cron) for Stock Alert Check -->
+        <record id="ir_cron_check_low_stock" model="ir.cron">
+            <field name="name">Coffee Shop: Check Low Stock Alerts</field>
+            <field name="model_id" ref="product.model_product_template"/>
+            <field name="state">code</field>
+            <field name="code">model._check_low_stock_alerts()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="active">True</field>
+        </record>
+    </data>
+</odoo>

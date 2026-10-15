@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Email Template for Low Stock Alert -->
+        <record id="email_template_low_stock" model="mail.template">
+            <field name="name">Coffee Shop: Low Stock Alert</field>
+            <field name="model_id" ref="product.model_product_template"/>
+            <field name="subject">⚠️ Peringatan Stok Menipis: {{ object.name }}</field>
+            <field name="email_from">{{ object.company_id.email or object.env.user.email or 'noreply@coffeeshop.com' }}</field>
+            <field name="body_html" type="html">
+                <div style="background-color: #fbfaf7; padding: 30px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #4a3e3d;">
+                    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #ece9e2;">
+                        <!-- Header -->
+                        <div style="background-color: #6f4e37; padding: 25px; text-align: center;">
+                            <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600; letter-spacing: 0.5px;">
+                                ☕ Coffee Shop Stock Alert
+                            </h1>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div style="padding: 30px; line-height: 1.6;">
+                            <p style="font-size: 16px; margin-top: 0;">Halo Tim Coffee Shop,</p>
+                            <p style="font-size: 15px;">Kami mendeteksi bahwa stok untuk salah satu item menu/bahan baku berikut telah berada di bawah batas minimum yang ditentukan:</p>
+                            
+                            <!-- Product Details Card -->
+                            <div style="background-color: #fcfbfa; border: 1px solid #f3efeb; border-left: 4px solid #d9534f; border-radius: 6px; padding: 20px; margin: 25px 0;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 6px 0; font-weight: bold; width: 40%; font-size: 14px; color: #8c7b70;">Nama Produk:</td>
+                                        <td style="padding: 6px 0; font-size: 15px; font-weight: bold; color: #4a3e3d;">{{ object.name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 6px 0; font-weight: bold; font-size: 14px; color: #8c7b70;">Stok Saat Ini:</td>
+                                        <td style="padding: 6px 0; font-size: 16px; font-weight: bold; color: #d9534f;">
+                                            {{ object.qty_available }} {{ object.uom_id.name }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 6px 0; font-weight: bold; font-size: 14px; color: #8c7b70;">Batas Minimum:</td>
+                                        <td style="padding: 6px 0; font-size: 15px; color: #4a3e3d;">{{ object.low_stock_threshold }} {{ object.uom_id.name }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <p style="font-size: 15px;">Segera lakukan pemesanan atau pengisian ulang (replenishment) ke supplier untuk menghindari kendala penjualan pada sesi kasir.</p>
+                            
+                            <!-- Action Button -->
+                            <div style="text-align: center; margin: 35px 0 15px 0;">
+                                <a t-att-href="'/web#id=%s&amp;model=product.template&amp;view_type=form' % object.id" 
+                                   style="background-color: #6f4e37; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 14px; display: inline-block; box-shadow: 0 2px 5px rgba(111,78,55,0.2);">
+                                    Lihat Detail &amp; Stok Produk
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Footer -->
+                        <div style="background-color: #f7f5f0; padding: 20px; text-align: center; font-size: 12px; color: #a1938a; border-top: 1px solid #f3efeb;">
+                            <p style="margin: 0;">Email otomatis ini dikirim oleh Sistem Odoo Coffee Shop.</p>
+                            <p style="margin: 5px 0 0 0;">Mohon tidak membalas email ini secara langsung.</p>
+                        </div>
+                    </div>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

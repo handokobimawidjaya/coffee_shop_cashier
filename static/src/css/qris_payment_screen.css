@@ -1,0 +1,144 @@
+/* ==========================================================
+   COD COFFEE - QRIS PAYMENT SCREEN
+   Visual merge QRIS + payment summary
+   Tanpa mengubah struktur XML Odoo
+   ========================================================== */
+
+
+/* ----------------------------------------------------------
+   QRIS PANEL
+   ---------------------------------------------------------- */
+
+.qris-payment-panel {
+    flex: 1 1 auto;
+    min-height: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #ffffff;
+
+    /*
+     * hanya sudut atas yang rounded.
+     * bagian bawah akan menyambung ke payment-summary.
+     */
+    border-radius: 0.75rem 0.75rem 0 0 !important;
+
+    padding: 12px 12px 4px 12px !important;
+
+    /*
+     * Odoo center-content memakai gap-2 (~8px).
+     * Kita tarik panel ke bawah agar menyatu dengan summary.
+     */
+    margin-bottom: -0.5rem !important;
+
+    overflow: hidden;
+}
+
+
+/* ----------------------------------------------------------
+   QRIS IMAGE
+   ---------------------------------------------------------- */
+
+.qris-payment-content {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qris-payment-image {
+    display: block;
+
+    width: auto;
+    height: auto;
+
+    max-width: min(390px, 85%);
+    max-height: 48vh;
+
+    object-fit: contain;
+}
+
+
+/* ----------------------------------------------------------
+   PAYMENT SUMMARY
+   Remaining + payment method
+   ---------------------------------------------------------- */
+
+/*
+ * Hanya payment-summary yang persis berada setelah QRIS panel.
+ * Jadi Cash mode tidak ikut berubah.
+ */
+
+.qris-payment-panel + .payment-summary {
+    flex: 0 0 auto !important;
+
+    background: #ffffff !important;
+
+    /*
+     * sudut atas 0 agar terlihat menyatu dengan QRIS
+     */
+    border-radius: 0 0 0.75rem 0.75rem !important;
+
+    padding:
+        4px
+        14px
+        14px
+        14px !important;
+
+    min-height: 135px;
+
+    justify-content: center !important;
+
+    overflow: visible !important;
+}
+
+
+/* Hilangkan kemungkinan garis/celah visual */
+.qris-payment-panel + .payment-summary::before {
+    display: none !important;
+}
+
+
+/* ----------------------------------------------------------
+   TABLET
+   ---------------------------------------------------------- */
+
+@media (max-width: 1200px) {
+
+    .qris-payment-image {
+        max-width: 340px;
+        max-height: 43vh;
+    }
+
+}
+
+
+/* ----------------------------------------------------------
+   MOBILE
+   ---------------------------------------------------------- */
+
+@media (max-width: 768px) {
+
+    .qris-payment-panel {
+        min-height: 250px;
+
+        padding: 8px 8px 2px 8px !important;
+
+        border-radius: 0.75rem 0.75rem 0 0 !important;
+    }
+
+    .qris-payment-image {
+        max-width: 260px;
+        max-height: 34vh;
+    }
+
+    .qris-payment-panel + .payment-summary {
+        padding: 4px 8px 10px 8px !important;
+
+        border-radius: 0 0 0.75rem 0.75rem !important;
+    }
+}

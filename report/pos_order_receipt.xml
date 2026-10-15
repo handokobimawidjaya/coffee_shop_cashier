@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_pos_order_full_receipt" model="ir.actions.report">
+        <field name="name">Print Full Receipt</field>
+        <field name="model">pos.order</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">coffee_shop_cashier.report_pos_order_full_receipt</field>
+        <field name="report_file">coffee_shop_cashier.report_pos_order_full_receipt</field>
+    </record>
+
+    <record id="action_pos_order_print_full_receipt" model="ir.actions.server">
+        <field name="name">Print Full Receipt</field>
+        <field name="model_id" ref="point_of_sale.model_pos_order"/>
+        <field name="binding_model_id" ref="point_of_sale.model_pos_order"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">
+records.ensure_one()
+action = {
+    'type': 'ir.actions.act_url',
+    'url': '/coffee_shop_cashier/pos_order/%s/print_receipt' % records.id,
+    'target': 'new',
+}
+        </field>
+    </record>
+
+    <template id="report_pos_order_full_receipt">
+        <t t-call="web.html_container">
+            <link rel="stylesheet" href="/coffee_shop_cashier/static/src/css/thermal_receipt.css"/>
+            <style>
+                .receipt-page { font-family: sans-serif; color: #000; }
+                .receipt { margin: 0 auto; }
+                .receipt-center { text-align: center; }
+                .receipt-logo { display: block; max-width: 30mm; max-height: 25mm; margin: 0 auto 3mm; }
+                .receipt-order-name { font-size: 16pt; margin-top: 2mm; }
+                .receipt-gap { height: 4mm; }
+                .receipt-divider { text-align: center; white-space: nowrap; overflow: hidden; margin: 2mm 0; }
+                .receipt-line { display: flex; justify-content: space-between; align-items: flex-start; gap: 1mm; }
+                .receipt-line > :first-child { min-width: 0; }
+                .receipt-line > :last-child { flex-shrink: 0; white-space: nowrap; text-align: right; }
+                .receipt-product { max-width: 35mm; overflow-wrap: anywhere; }
+                .receipt-price { white-space: nowrap; }
+                .receipt-detail { font-size: 10px; overflow-wrap: anywhere; margin-bottom: 2mm; }
+                .receipt-total { margin-top: 1mm; }
+                .receipt-footer { margin-top: 10mm; font-size: 8pt; }
+                .preserve-lines { white-space: pre-line; }
+            </style>
+            <script type="text/javascript">
+                window.addEventListener('load', function () { window.print(); });
+            </script>
+            <t t-foreach="docs" t-as="o">
+                <div class="render-container">
+                    <div class="receipt-page receipt pos-receipt">
+                        <div class="receipt-center">
+                            <t t-set="receipt_taxes" t-value="o.lines.mapped('tax_ids')"/>
+                            <img t-if="o.company_id.logo"
+                                 t-att-src="image_data_uri(o.company_id.logo)"
+                                 class="receipt-logo" alt="Logo"/>
+                            <div t-if="o.company_id.name" t-field="o.company_id.name"/>
+                            <div t-if="o.company_id.phone">
+                                Tel: <span t-field="o.company_id.phone"/>
+                            </div>
+                            <div t-if="o.config_id.receipt_header" class="preserve-lines"
+                                 t-field="o.config_id.receipt_header"/>
+                            <div class="receipt-divider">--------------------------------</div>
+                            <div t-if="o.user_id">Served by <span t-field="o.user_id.name"/></div>
+                            <div class="receipt-order-name">
+                                <t t-if="o.customer_name">
+                                    <span t-field="o.customer_name"/> -
+                                </t>
+                                <span t-field="o.sequence_number"/>
+                            </div>
+                            <div class="receipt-gap"/>
+                        </div>
+
+                        <t t-foreach="o.lines" t-as="line">
+                            <div class="receipt-line orderline">
+                                <strong class="receipt-product product-name" t-field="line.full_product_name"/>
+                                <strong class="receipt-price product-price"
+                                        t-out="o.currency_id.format(line.price_subtotal_incl)"/>
+                            </div>
+                            <div class="receipt-detail">
+                                <span t-out="line.qty" t-options="{'widget': 'float', 'precision': 2}"/>
+                                <span> × </span>
+                                <span t-out="o.currency_id.format(line.price_unit)"/>
+                                <span t-if="line.product_uom_id"> / <t t-out="line.product_uom_id.name"/></span>
+                            </div>
+                            <div t-if="line.discount" class="receipt-detail">
+                                Discount: <span t-out="line.discount"/>%
+                            </div>
+                        </t>
+
+                        <div class="receipt-divider">--------------------------------</div>
+                        <div class="pos-receipt-taxes">
+                            <div class="receipt-line d-flex">
+                                <span>Untaxed Amount</span>
+                                <span t-out="o.currency_id.format(o.amount_total - o.amount_tax)"/>
+                            </div>
+                            <div class="receipt-line d-flex">
+                                <span t-if="len(receipt_taxes) == 1">
+                                    Tax <t t-out="receipt_taxes[0].name"/>
+                                </span>
+                                <span t-else="">Tax</span>
+                                <span t-out="o.currency_id.format(o.amount_tax)"/>
+                            </div>
+                        </div>
+                        <div class="receipt-divider">--------------------------------</div>
+                        <div class="receipt-line receipt-total pos-receipt-amount">
+                            <span>TOTAL</span>
+                            <strong class="pos-receipt-right-align" t-out="o.currency_id.format(o.amount_total)"/>
+                        </div>
+
+                        <t t-foreach="o.payment_ids" t-as="payment">
+                            <div t-if="not payment.is_change" class="receipt-line paymentlines">
+                                <span t-field="payment.payment_method_id.name"/>
+                                <span class="pos-receipt-right-align" t-out="o.currency_id.format(payment.amount)"/>
+                            </div>
+                        </t>
+                        <div t-if="o.amount_return" class="receipt-line pos-receipt-amount">
+                            <span>Change</span>
+                            <span class="pos-receipt-right-align" t-out="o.currency_id.format(o.amount_return)"/>
+                        </div>
+
+                        <div class="receipt-center receipt-footer">
+                            <div class="receipt-gap"/>
+                            <div t-if="o.config_id.receipt_footer" class="preserve-lines"
+                                 t-field="o.config_id.receipt_footer"/>
+                            <div>Powered by Odoo</div>
+                            <div t-out="o.pos_reference or o.name"/>
+                            <div t-field="o.date_order" t-options="{'widget': 'datetime'}"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

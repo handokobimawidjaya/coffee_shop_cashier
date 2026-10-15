@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//h1[@t-if='props.data.trackingNumber and props.data.bigTrackingNumber']" position="replace">
+            <h1 class="tracking-number text-center" style="font-size: 100px"
+                t-if="props.data.trackingNumber and props.data.bigTrackingNumber">
+                <t t-if="props.data.customerName"><t t-esc="props.data.customerName"/> - </t>
+                <t t-esc="props.data.trackingNumber"/>
+            </h1>
+        </xpath>
+        <xpath expr="//div[@t-if='props.data.trackingNumber and !props.data.bigTrackingNumber']" position="replace">
+            <div t-if="props.data.trackingNumber and !props.data.bigTrackingNumber">
+                <span class="tracking-number fs-1">
+                    <t t-if="props.data.customerName"><t t-esc="props.data.customerName"/> - </t>
+                    <t t-esc="props.data.trackingNumber"/>
+                </span>
+            </div>
+        </xpath>
+    </t>
+</templates>

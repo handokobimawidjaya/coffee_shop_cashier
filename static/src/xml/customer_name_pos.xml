@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
+        <xpath expr="//SelectPartnerButton" position="replace"/>
+    </t>
+
+    <t t-inherit="point_of_sale.ActionpadWidget" t-inherit-mode="extension">
+        <xpath expr="//SelectPartnerButton" position="replace"/>
+    </t>
+
+    <t t-inherit="point_of_sale.PaymentScreenButtons" t-inherit-mode="extension">
+        <xpath expr="//button[contains(@class, 'partner-button')]" position="replace">
+            <input type="text"
+                class="customer-name-input form-control form-control-lg w-100 w-md-50"
+                placeholder="Customer name"
+                autocomplete="off"
+                required="required"
+                t-att-value="currentOrder.customer_name || ''"
+                t-on-input="updateCustomerName"/>
+        </xpath>
+    </t>
+
+    <t t-inherit="point_of_sale.ReceiptScreen" t-inherit-mode="extension">
+        <xpath expr="//input[contains(@class, 'send-receipt-email-input')]/parent::div" position="replace">
+            <input type="text"
+                class="customer-name-after-payment flex-grow-1 border p-3 bg-view rounded-2"
+                placeholder="Customer name"
+                t-att-value="this.currentOrder.customer_name || ''"
+                readonly="readonly"/>
+        </xpath>
+    </t>
+</templates>
